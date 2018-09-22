@@ -150,7 +150,6 @@ var TestUploadTable = []struct {
 			"with":     1,
 			"and":      1,
 		},
-		prefix: "blue",
 	},
 }
 

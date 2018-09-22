@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-zoo/bone"
+	ap "github.com/ldelossa/asciiparser"
 	"github.com/ldelossa/asciiparser/handlers"
 )
 
@@ -12,11 +14,17 @@ const (
 )
 
 func main() {
-	// create an mux
-	m := http.NewServeMux()
+	// create an mux. i use bone mux so that my http handlers do not need to
+	// diverge from go's HandlerFunc type.
+	m := bone.New()
+
+	// create our in memory store
+	store := ap.NewInMemStore()
 
 	// add our handler to mux
-	m.HandleFunc("/api/v1/upload", handlers.Upload())
+	m.PostFunc("/api/v1/uploads", handlers.Upload())
+	m.GetFunc("/api/v1/uploads/:id", handlers.GetUpload(store))
+	m.GetFunc("/api/v1/uploads", handlers.GetUpload(store))
 
 	// create our server
 	s := http.Server{

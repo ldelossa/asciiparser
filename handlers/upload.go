@@ -13,6 +13,7 @@ import (
 
 const (
 	sizeLimitBytes = 10000000
+	excludePrefix  = "blue"
 )
 
 // Upload is our handler for uploading an ASCII file to. We use a closure syntax incase future dependencies
@@ -49,9 +50,7 @@ func Upload() http.HandlerFunc {
 		// create word count variable
 		var wm map[string]int = map[string]int{}
 		var wc int64
-
-		// get byte prefix we will use for excluding words from our word map
-		prefix := []byte(r.FormValue("exclude_prefix"))
+		prefix := []byte(excludePrefix)
 
 		// create bufio Scanner from request body
 		s := bufio.NewScanner(r.Body)
@@ -76,6 +75,7 @@ func Upload() http.HandlerFunc {
 
 		// return word count and word map
 		err := json.NewEncoder(w).Encode(res.UploadResponse{
+			Size: r.ContentLength,
 			UUID: uuid.New().String(),
 			WC:   wc,
 			OC:   wm,
