@@ -22,7 +22,7 @@ func main() {
 	store := ap.NewInMemStore()
 
 	// add our handler to mux
-	m.PostFunc("/api/v1/uploads", handlers.Upload())
+	m.PostFunc("/api/v1/uploads", handlers.Upload(store))
 	m.GetFunc("/api/v1/uploads/:id", handlers.GetUpload(store))
 	m.GetFunc("/api/v1/uploads", handlers.GetUpload(store))
 

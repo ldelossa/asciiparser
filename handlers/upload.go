@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	ap "github.com/ldelossa/asciiparser"
 	res "github.com/ldelossa/asciiparser/internal/resourcesV1"
 )
 
@@ -18,7 +19,7 @@ const (
 
 // Upload is our handler for uploading an ASCII file to. We use a closure syntax incase future dependencies
 // must be plumbed into handler.
-func Upload() http.HandlerFunc {
+func Upload(store ap.Storer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// this is a POST hold handler
 		if r.Method != "POST" {
@@ -73,15 +74,25 @@ func Upload() http.HandlerFunc {
 			wm[s.Text()] = wm[s.Text()] + 1
 		}
 
-		// return word count and word map
-		err := json.NewEncoder(w).Encode(res.UploadResponse{
+		// create resource
+		res := &res.UploadResponse{
 			Size: r.ContentLength,
 			UUID: uuid.New().String(),
 			WC:   wc,
 			OC:   wm,
-		})
+		}
+
+		// return word count and word map
+		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
 			log.Printf("failed to serialize UploadResponse")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		// store resource
+		err = store.StoreV1(res)
+		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}

@@ -8,6 +8,12 @@
   version = "v1.1.1"
 
 [[projects]]
+  name = "github.com/go-zoo/bone"
+  packages = ["."]
+  revision = "fd0aebc74e908868b09ac140fb5a53cb363884c1"
+  version = "1.2"
+
+[[projects]]
   name = "github.com/google/uuid"
   packages = ["."]
   revision = "d460ce9f8df2e77fb1ba55ca87fafed96c607494"
@@ -28,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4bcdacca0afbdb3617b9ef06e92da19a6198a3091bb88271c532c10445559dd7"
+  inputs-digest = "5a34f6d0aa5372fce790b1d7e0aa8d2a656033538c891101e75775ce603718d9"
   solver-name = "gps-cdcl"
   solver-version = 1
