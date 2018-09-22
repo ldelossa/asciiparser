@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	ap "github.com/ldelossa/asciiparser"
 	h "github.com/ldelossa/asciiparser/handlers"
 	r "github.com/ldelossa/asciiparser/internal/resourcesV1"
 	"github.com/stretchr/testify/assert"
@@ -68,8 +69,9 @@ var TestFileSizeTable = []struct {
 func TestFileSizeConstrant(t *testing.T) {
 	teardown := setupFileSizeConstrant(t)
 	defer teardown()
+	store := ap.NewInMemStore()
 
-	handler := h.Upload()
+	handler := h.Upload(store)
 
 	for _, tt := range TestFileSizeTable {
 		f, err := ioutil.ReadFile(tt.path)
@@ -155,6 +157,9 @@ var TestUploadTable = []struct {
 
 func TestUpload(t *testing.T) {
 	for _, tt := range TestUploadTable {
+		// create store
+		store := ap.NewInMemStore()
+
 		// create request object
 		req := httptest.NewRequest("POST", "/api/v1/upload", bytes.NewBuffer(tt.contents))
 		q := req.URL.Query()
@@ -163,7 +168,7 @@ func TestUpload(t *testing.T) {
 
 		// create response recorder
 		rr := httptest.NewRecorder()
-		handler := h.Upload()
+		handler := h.Upload(store)
 
 		// call our handler directly
 		handler.ServeHTTP(rr, req)

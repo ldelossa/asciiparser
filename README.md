@@ -112,3 +112,14 @@ GET ALL
   }
 ]
 ```
+
+## Testing
+You are able to use Go's automated testing library to confirm any changes to this code does not break functionality. You may run the go test tool from the root of the directory like so
+
+```
+❯ go test ./...
+ok  	github.com/ldelossa/asciiparser	(cached)
+?   	github.com/ldelossa/asciiparser/cmd/asciiparser	[no test files]
+ok  	github.com/ldelossa/asciiparser/handlers	0.038s
+?   	github.com/ldelossa/asciiparser/internal/resourcesV1	[no test files]
+```
